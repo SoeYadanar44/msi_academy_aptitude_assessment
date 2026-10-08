@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f6fb">
+  <meta name="description" content="A 48-question career interest assessment from MSI Academy. Explore the activities, work environments and study areas that match your interests.">
+  <link rel="icon" type="image/png" href="logo.png">
+  <title>MSI Academy | Aptitude Assessment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body data-screen="home">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="MSI Academy home">
+      <img class="brand-mark" src="logo.png" alt="MSI Academy Logo">
+      <span class="brand-name"><strong class="brand-msi">MSI</strong> <strong class="brand-academy">Academy</strong></span>
+    </a>
+    <span class="header-label">CAREER INTERESTS</span>
+  </header>
+
+  <main id="main">
+    <section class="screen landing active" id="home" aria-labelledby="hero-title">
+      <div class="welcome-card">
+        <div class="interest-orbit" role="img" aria-label="Holland RIASEC model: Realistic, Investigative, Artistic, Social, Enterprising and Conventional interests.">
+          <span class="orbit-center"></span>
+          <span class="orbit-node">R</span><span class="orbit-node">I</span><span class="orbit-node">A</span>
+          <span class="orbit-node">S</span><span class="orbit-node">E</span><span class="orbit-node">C</span>
+        </div>
+        <p class="eyebrow">A QUICK SELF-DISCOVERY</p>
+        <h1 id="hero-title" class="landing-title"><span>Aptitude</span><span>Assessment</span></h1>
+        <p class="lead">Holland RIASEC မော်ဒယ်မှာပါဝင်တဲ့ နယ်ပယ် ၆ ခု (Realistic, Investigative, Artistic, Social, Enterprising နဲ့ Conventional) ထဲကမှ သင် ဘာကို စိတ်ဝင်စားလဲဆိုတာ ရှာဖွေကြည့်လိုက်ပါ။</p>
+        <p class="framework-note"><strong>ဤစစ်ဆေးမှုသည် မူရင်း မေးခွန်း ၆၀ ပါဝင်သော O*NET Interest Profiler ကို အခြေခံ၍ မေးခွန်း ၄၈ ခုပါဝင်သော MSI Academy ၏ သီးခြားပြုပြင်မွမ်းမံထားသည့် ပုံစံဖြင့် တည်ဆောက်ထားခြင်းဖြစ်ပါသည်။</p>
+        <ul class="welcome-points">
+          <li><span aria-hidden="true">✓</span><span>48 questions</span></li>
+          <li><span aria-hidden="true">✓</span><span>A simple 5-point scale—no right or wrong answers</span></li>
+          <li><span aria-hidden="true">✓</span><span>Career paths and university study areas to explore</span></li>
+        </ul>
+        <button class="button button-primary" id="start-button" type="button">Start assessment <span aria-hidden="true">→</span></button>
+        <p class="landing-note">ရလဒ်များသည် စိတ်ပါဝင်စားမှုကိုသာ ဖော်ပြပြီး လုပ်ဆောင်နိုင်စွမ်း သို့မဟုတ် ပုံသေ အသက်မွေးဝမ်းကျောင်း လမ်းကြောင်းကို ဖော်ပြခြင်း မဟုတ်ပါ။</p>
+      </div>
+    </section>
+
+    <section class="screen quiz" id="quiz" aria-labelledby="question-title" hidden>
+      <!-- Screen reader announcement live region -->
+      <div class="sr-only" aria-live="polite" id="a11y-announcer"></div>
+
+      <div class="quiz-top">
+        <h1 class="assessment-title">Aptitude Assessment</h1>
+        <p class="question-count" id="question-count">Question 01 / 48</p>
+        <div class="progress-track" role="progressbar" id="progress" aria-label="Assessment progress" aria-valuemin="0" aria-valuemax="48" aria-valuenow="0">
+          <span id="progress-fill"></span>
+        </div>
+      </div>
+
+      <div class="question-area">
+        <p class="eyebrow" id="question-category">YOUR INTERESTS</p>
+        <h1 id="question-title" tabindex="-1"></h1>
+        <p class="hint">သင်နှင့် အကိုက်ညီဆုံး ဖြစ်စေမည့် အဖြေကို ရွေးချယ်ပါ။</p>
+        <div class="answers" id="answers" role="group" aria-label="Answer choices"></div>
+      </div>
+
+      <nav class="quiz-nav" aria-label="Question navigation">
+        <button class="button button-quiet" id="previous-button" type="button">← Previous</button>
+        <button class="button button-primary" id="next-button" type="button" disabled>Next →</button>
+      </nav>
+    </section>
+
+    <section class="screen results" id="results" aria-labelledby="result-title" hidden>
+      <div class="result-heading">
+        <p class="eyebrow">YOUR INTEREST PROFILE</p>
+        <h1 id="result-title" tabindex="-1">Your results</h1>
+        <p class="lead" id="result-summary"></p>
+        <section class="broad-report" id="broad-report" aria-labelledby="broad-report-title" hidden>
+          <p class="broad-report-label">A CLOSER LOOK</p>
+          <h2 id="broad-report-title"></h2>
+          <p id="broad-report-copy"></p>
+        </section>
+        <p class="assessment-date" id="assessment-date"></p>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title"><span>Six-category score overview</span><span class="chart-caption">Your interest ratings</span></div>
+        <div id="score-chart" class="score-chart" role="group" aria-label="Scores across six interest areas"></div>
+      </div>
+
+      <h2 class="section-title" id="profile-label">Your profile</h2>
+      <div id="profile-cards" class="profile-cards"></div>
+
+      <section class="exploration-section" id="study-section" aria-labelledby="study-title">
+        <div class="section-heading">
+          <h2 class="section-title" id="study-title">University and study areas</h2>
+          <p>တက္ကသိုလ်များ၏ သင်တန်းများ၊ ဘာသာရပ်များနှင့် ဝင်ခွင့် လိုအပ်ချက်များကို နှိုင်းယှဉ်ရန်</p>
+        </div>
+        <div id="study-cards" class="exploration-grid"></div>
+      </section>
+
+      <section class="exploration-section" id="career-section" aria-labelledby="career-title">
+        <div class="section-heading">
+          <h2 class="section-title" id="career-title">Career paths to explore</h2>
+          <p>သင့် စိတ်ဝင်စားမှုနှင့် ကိုက်ညီမည့် အလုပ်ပတ်ဝန်းကျင်နှင့် လုပ်ငန်းစဉ်များကို လေ့လာပါ။ ဤသည်မှာ စဉ်းစားရန် ဖြစ်နိုင်ခြေများသာ ဖြစ်ပြီး ပုံသေ အကြံပြုချက်များ မဟုတ်ပါ။</p>
+        </div>
+        <div id="career-cards" class="exploration-grid"></div>
+      </section>
+
+      <p class="result-note">ရမှတ်များသည် သင်၏ စိတ်ပါဝင်စားမှုကိုသာ ဖော်ပြပြီး ကျွမ်းကျင်မှု၊ လုပ်ဆောင်နိုင်စွမ်း သို့မဟုတ် အရည်အသွေးကို တိုင်းတာခြင်း မဟုတ်ပါ။</p>
+      <button class="button button-primary retake" id="retake-button" type="button">Retake assessment <span aria-hidden="true">↻</span></button>
+    </section>
+  </main>
+
+  <footer>MSI Academy <span>·</span> Career interest exploration</footer>
+</body>
+</html>

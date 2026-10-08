@@ -164,17 +164,18 @@ const OPTIONS = [
     if (first.length === 3) return { kind: 'three-primary', groups: [{ role: 'Core Interest Profile', items: first }] };
     if (first.length === 2) {
       const result = [{ role: 'Dual primary · equal importance', items: first }];
-      // Case 7: if second place is shared by multiple categories, show only the dual primary.
-      if (second && second.length === 1 && first[0].score - second[0].score <= 15) result.push({ role: 'Secondary interest', items: second });
+      if (second && first[0].score - second[0].score <= 15) {
+        result.push({ role: second.length === 1 ? 'Secondary interest' : 'Shared secondary interests', items: second });
+      }
       return { kind: 'dual-primary', groups: result };
     }
     const primary = first[0];
     if (!second) return { kind: 'single-primary', groups: [{ role: 'Primary interest', items: [primary] }] };
+    const gap12 = primary.score - second[0].score;
+    if (gap12 > 15) return { kind: 'primary-only-gap', groups: [{ role: 'Primary interest', items: [primary] }] };
     if (second.length >= 3) return { kind: 'broad-secondary', groups: [
       { role: 'Primary interest', items: [primary] }, { role: 'Broad secondary interests', items: second }
     ] };
-    const gap12 = primary.score - second[0].score;
-    if (gap12 > 15) return { kind: 'primary-only-gap', groups: [{ role: 'Primary interest', items: [primary] }] };
     if (second.length === 2) return { kind: 'shared-secondary', groups: [
       { role: 'Primary interest', items: [primary] }, { role: 'Shared secondary', items: second }
     ] };
@@ -193,22 +194,24 @@ const OPTIONS = [
         return 'သင့်မှာ ထင်ရှားတဲ့ စိတ်ဝင်စားမှု တစ်ခုတည်းရယ်လို့ သီးသန့်မရှိပါဘူး။ နယ်ပယ်မျိုးစုံကို လေ့လာကြည့်ဖို့ အကြံပြုချင်ပါတယ်။';
       
       case 'three-primary': 
-        return 'သင့်မှာ ထိပ်ဆုံးကနေ အဆင့်တူ စိတ်ဝင်စားမှု ၃ ခု ရှိနေပါတယ်။';
+        return 'သင့်မှာ အမြင့်ဆုံး အဓိကစိတ်ဝင်စားမှု ၃ ခု ရှိနေပါတယ်။';
       
-      case 'dual-primary': 
-        return 'သင့်မှာ ထိပ်ဆုံးကနေ အဆင့်တူ အဓိကစိတ်ဝင်စားမှု ၂ ခု ရှိနေပါတယ်။';
-      
+      case 'dual-primary':
+        if (result.groups.length === 1) return 'သင့်မှာ အမြင့်ဆုံး အဓိကစိတ်ဝင်စားမှု ၂ ခု ရှိနေပါတယ်။';
+        return result.groups[1].items.length === 1
+          ? 'သင့်မှာ အမြင့်ဆုံး အဓိကစိတ်ဝင်စားမှု ၂ ခုနဲ့ အနီးစပ်ဆုံး ဒုတိယစိတ်ဝင်စားမှု ၁ ခု ရှိပါတယ်။'
+          : 'သင့်မှာ အမြင့်ဆုံး အဓိကစိတ်ဝင်စားမှု ၂ ခုရှိပြီး အနီးစပ်ဆုံး ဒုတိယစိတ်ဝင်စားမှုများလည်း ပါဝင်နေပါတယ်။';
       case 'shared-secondary': 
-        return 'သင့်မှာ အဓိကစိတ်ဝင်စားမှု ၁ ခုနဲ့ ဒုတိယအဆင့်မှာ အဆင့်တူ စိတ်ဝင်စားမှု ၂ ခု ရှိနေပါတယ်။';
+        return 'သင့်မှာ အဓိကစိတ်ဝင်စားမှု ၁ ခုနဲ့ အနီးစပ်ဆုံး ဒုတိယ စိတ်ဝင်စားမှု ၂ ခု ရှိနေပါတယ်။';
       
       case 'broad-secondary': 
-        return 'သင့်မှာ အဓိကစိတ်ဝင်စားမှု ၁ ခုအပြင် ဒုတိယအဆင့်မှာ အမှတ်တူ စိတ်ဝင်စားမှု အများအပြား ရှိနေပါတယ်။';
+        return 'သင့်မှာ အဓိကစိတ်ဝင်စားမှု ၁ ခုအပြင် အနီးစပ်ဆုံး ဒုတိယ စိတ်ဝင်စားမှု အများအပြား ရှိနေပါတယ်။';
       
       case 'primary-only-gap': 
-        return 'သင့်မှာ အဓိကစိတ်ဝင်စားမှု ၁ ခုပဲ ထင်းထင်းရှားရှား ရှိပြီး ဒုတိယအဆင့် စိတ်ဝင်စားမှု မရှိပါဘူး။';
+        return 'သင့်မှာ အဓိကစိတ်ဝင်စားမှု ၁ ခုပဲ ထင်ထင်ရှားရှား ရှိနေပါတယ်';
       
       case 'primary-secondary': 
-        return 'သင့်မှာ အဓိကစိတ်ဝင်စားမှု ၁ ခုနဲ့ ဒုတိယစိတ်ဝင်စားမှု ၁ ခု ရှိပါတယ်။';
+        return 'သင့်မှာ အဓိကစိတ်ဝင်စားမှု ၁ ခုနဲ့ အနီးစပ်ဆုံး ဒုတိယ စိတ်ဝင်စားမှု ၁ ခု ရှိပါတယ်။';
       
       case 'ranked': 
         return result.groups.length === 3 
@@ -282,17 +285,27 @@ const OPTIONS = [
     const broadReport = document.querySelector('#broad-report');
     const broadReportTitle = document.querySelector('#broad-report-title');
     const broadReportCopy = document.querySelector('#broad-report-copy');
-    const isBroadProfile = result.kind === 'broad-all' || result.kind === 'broad-secondary';
+    const hasBroadDualProfile = result.kind === 'dual-primary' && result.groups[1] && result.groups[1].items.length >= 3;
+    const isBroadProfile = result.kind === 'broad-all' || result.kind === 'three-primary' || result.kind === 'broad-secondary' || hasBroadDualProfile;
     broadReport.hidden = !isBroadProfile;
     document.querySelector('#study-section').hidden = isBroadProfile;
     document.querySelector('#career-section').hidden = isBroadProfile;
     if (isBroadProfile) {
       broadReportTitle.textContent = result.kind === 'broad-all'
         ? 'Your interests cover a broad range'
-        : 'One leading interest, with a broad range alongside it';
+        : result.kind === 'three-primary'
+          ? 'Three interests share the lead'
+          : hasBroadDualProfile
+            ? 'Two leading interests, with a broad range alongside them'
+            : 'One leading interest, with a broad range alongside it';
       broadReportCopy.textContent = result.kind === 'broad-all'
-        ? 'Your answers show interest across several areas, rather than one clear direction. That is a valid result, and many students discover what suits them through new experiences. You do not need to choose a university subject or career based on this assessment. Try different classes, projects, clubs, or volunteer activities, and notice which ones keep you engaged. Your interests can also grow and change over time.'
-        : `Your answers show a leading interest in ${result.groups[0].items[0].name}, alongside several other areas that also interest you. You may enjoy different kinds of learning and work, so you do not need to narrow your options based on one assessment. Try activities that let you explore these interests, then notice which feel most engaging. Use what you learn as a starting point for conversations about future study and work.`;
+        broadReportCopy.textContent = result.kind === 'broad-all'
+    ? 'သင့်အဖြေတွေအရ စိတ်ဝင်စားမှုနယ်ပယ် တစ်ခုတည်းမဟုတ်ဘဲ နယ်ပယ်အများအပြားကို စိတ်ဝင်စားနေတာတွေ့ရပါတယ်။ ဒါဟာ ပုံမှန်ရလဒ်တစ်ခုဖြစ်ပြီး ကျောင်းသားအများစုဟာ အတွေ့အကြုံသစ်တွေကနေတစ်ဆင့် သူတို့နဲ့ ကိုက်ညီတာကို ရှာဖွေတွေ့ရှိလေ့ရှိကြပါတယ်။ ဒီစစ်ဆေးမှုတစ်ခုတည်းပေါ် မူတည်ပြီး တက္ကသိုလ်ဘာသာရပ် သို့မဟုတ် အလုပ်အကိုင်ကို ချက်ချင်းရွေးချယ်ဖို့ မလိုပါဘူး။ သင်တန်းသစ်တွေ၊ ပရောဂျက်တွေ၊ ကလပ်တွေ သို့မဟုတ် စေတနာ့ဝန်ထမ်း လှုပ်ရှားမှုတွေကို စမ်းလုပ်ကြည့်ရင်း ဘယ်အရာက သင့်ကို ပိုစိတ်ပါဝင်စားစေလဲဆိုတာ သတိပြုကြည့်ပါ။ သင့်စိတ်ဝင်စားမှုတွေဟာ အချိန်နဲ့အမျှ တိုးတက်ပြောင်းလဲနိုင်ပါတယ်။'
+    : result.kind === 'three-primary'
+      ? `သင့်ရဲ့ ထိပ်ဆုံးစိတ်ဝင်စားမှု ၃ ခုဖြစ်တဲ့ (${result.groups[0].items.map(area => area.name).join('၊ ')}) တို့ဟာ အမှတ်တူနေပါတယ်။ ဒါဟာ လက်ရှိမှာ နယ်ပယ်အများအပြားကို အမျှတူ စိတ်ဝင်စားနေတာကို ပြနေတာပါ။ ဒီစစ်ဆေးမှုပေါ် မူတည်ပြီး တစ်ခုတည်းကို အတည်မယူပါနဲ့ဦး၊ မတူညီတဲ့ သင်တန်းတွေနဲ့ လှုပ်ရှားမှုတွေကို စမ်းလုပ်ကြည့်ပြီး ဘာကို အနှစ်သက်ဆုံးလဲဆိုတာ သတိပြုကြည့်ပါ။`
+      : hasBroadDualProfile
+        ? `${result.groups[0].items[0].name} နဲ့ ${result.groups[0].items[1].name} တို့ဟာ သင့်ရဲ့ ထိပ်ဆုံးအမှတ်တူ စိတ်ဝင်စားမှုတွေဖြစ်ပြီး အခြား နယ်ပယ် ${result.groups[1].items.length} ခုကလည်း ကပ်လျက်မှာ ရှိနေပါတယ်။ သင်ဟာ လေ့လာမှုနဲ့ အလုပ်အကိုင် ပုံစံမျိုးစုံကို သဘောကျနိုင်ပါတယ်။ ဒီစစ်ဆေးမှုပေါ် မူတည်ပြီး တစ်ခုတည်းကို အတည်မယူပါနဲ့ဦး၊ ဒီစိတ်ဝင်စားမှုတွေကို စမ်းသပ်နိုင်မယ့် လှုပ်ရှားမှုတွေကို လုပ်ကြည့်ပြီး ဘယ်အရာက သင့်အတွက် အနှစ်သက်ဆုံးလဲဆိုတာ စောင့်ကြည့်ပါ။`
+        : `သင့်အဖြေတွေအရ ${result.groups[0].items[0].name} ကို အဓိက စိတ်ဝင်စားပြီး အခြား စိတ်ဝင်စားစရာ နယ်ပယ်အများအပြားလည်း ရှိနေတာကို တွေ့ရပါတယ်။ သင်ဟာ လေ့လာမှုနဲ့ အလုပ်အကိုင် ပုံစံမျိုးစုံကို သဘောကျနိုင်တာကြောင့် ဒီစစ်ဆေးမှုပေါ် မူတည်ပြီး တစ်ခုတည်းကို အတည်မယူပါနဲ့ဦး။ ဒီစိတ်ဝင်စားမှုတွေကို လေ့လာနိုင်မယ့် လှုပ်ရှားမှုတွေကို စမ်းလုပ်ကြည့်ပြီး ဘယ်အရာက သင့်အတွက် အနှစ်သက်ဆုံးလဲဆိုတာ စောင့်ကြည့်ပါ။ ဒီကနေ သိရှိလာတာတွေကို နောင်တက်ရောက်မယ့် ပညာရေးနဲ့ အလုပ်အကိုင်တွေအတွက် စတင်ဆွေးနွေးဖို့ စမှတ်တစ်ခုအဖြစ် အသုံးပြုပါ။`;
     }    document.querySelector('#profile-label').textContent = result.kind === 'broad-all' ? 'Balanced Interest Profile' : result.kind === 'broad-secondary' ? 'Broad Interest Profile' : 'Your interests';
 
     const cards = document.querySelector('#profile-cards');
